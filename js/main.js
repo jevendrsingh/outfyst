@@ -2,18 +2,11 @@
    OUTFYST — main.js
    ═══════════════════════════════════════════════════════════
    
-   WEB3FORMS SETUP (60 seconds):
-   ──────────────────────────────
-   1. Go to https://web3forms.com
-   2. Enter the email address where you want form submissions
-   3. They'll email you an access key — copy it
-   4. Open js/config.js and paste your key there
-      (if config.js doesn't exist, copy config.example.js → config.js)
-   5. Save, deploy, done. Submissions land in your inbox.
+   All credentials are managed via environment variables.
+   The build script (build.js) injects them into index.html
+   at deploy time. See .env.example for the full list.
    
    ═══════════════════════════════════════════════════════════ */
-
-var WEB3FORMS_ACCESS_KEY = (window.OUTFYST_CONFIG && window.OUTFYST_CONFIG.WEB3FORMS_ACCESS_KEY) || 'YOUR_ACCESS_KEY_HERE';
 
 /* ═══════════════════════════════════════════════════════════
    INIT — Runs after DOM is ready
@@ -89,7 +82,7 @@ function initManifestoObserver() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   FORM HANDLER — Web3Forms API
+   FORM HANDLER — Web3Forms (native POST)
    ═══════════════════════════════════════════════════════════ */
 
 function initFormHandler() {
@@ -97,83 +90,14 @@ function initFormHandler() {
   if (!form) return;
 
   var submitBtn = form.querySelector('.btn-submit');
-  var errorEl = document.getElementById('form-error');
-  var formContainer = document.getElementById('form-container');
-  var successEl = document.getElementById('form-success');
 
-  form.addEventListener('submit', function (e) {
-    e.preventDefault();
-
-    // Check access key
-    if (WEB3FORMS_ACCESS_KEY === 'YOUR_ACCESS_KEY_HERE') {
-      showError('Access key not configured. See js/main.js.');
-      return;
+  form.addEventListener('submit', function () {
+    // Show loading state while form submits
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'SENDING...';
     }
-
-    // Gather form data
-    var formData = {
-      access_key: WEB3FORMS_ACCESS_KEY,
-      name: form.querySelector('#field-name').value.trim(),
-      email: form.querySelector('#field-email').value.trim(),
-      phone: form.querySelector('#field-phone').value.trim(),
-      city: form.querySelector('#field-city').value.trim(),
-      message: form.querySelector('#field-message').value.trim(),
-      subject: 'OUTFYST — New interest registration'
-    };
-
-    // Validate required fields
-    if (!formData.name || !formData.email || !formData.city) {
-      showError('Please fill in all required fields.');
-      return;
-    }
-
-    // Disable & update button text
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'SENDING...';
-    hideError();
-
-    fetch('https://api.web3forms.com/submit', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(formData)
-    })
-      .then(function (response) {
-        return response.json();
-      })
-      .then(function (data) {
-        if (data.success) {
-          showSuccess();
-        } else {
-          submitBtn.disabled = false;
-          submitBtn.textContent = 'REGISTER INTEREST \u2192';
-          showError("Something's off. Try again or DM us on Instagram.");
-        }
-      })
-      .catch(function () {
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'REGISTER INTEREST \u2192';
-        showError("Something's off. Try again or DM us on Instagram.");
-      });
   });
-
-  function showError(msg) {
-    if (errorEl) {
-      errorEl.textContent = msg;
-      errorEl.style.display = 'block';
-    }
-  }
-
-  function hideError() {
-    if (errorEl) {
-      errorEl.style.display = 'none';
-    }
-  }
-
-  function showSuccess() {
-    // Replace form with success state
-    if (formContainer) formContainer.style.display = 'none';
-    if (successEl) successEl.style.display = 'block';
-  }
 }
 
 /* ═══════════════════════════════════════════════════════════

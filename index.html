@@ -174,7 +174,10 @@
 
         <!-- Form container (hidden on success) -->
         <div id="form-container">
-          <form id="register-form" class="register-form" novalidate>
+          <form id="register-form" class="register-form" action="https://api.web3forms.com/submit" method="POST">
+            <input type="hidden" name="access_key" value="__WEB3FORMS_ACCESS_KEY__">
+            <input type="hidden" name="subject" value="OUTFYST — New interest registration">
+            <input type="hidden" name="redirect" value="">
 
             <div class="form-group">
               <label class="form-group__label" for="field-name">FULL NAME</label>
@@ -268,14 +271,13 @@
     <p class="footer__wordmark">OUTFYST</p>
     <p class="footer__copy">© OUTFYST 2026 · BUILT IN INDIA · LAUNCHING SOON</p>
     <div class="footer__social">
-      <a href="#" class="footer__social-link" data-cursor-hover aria-label="Follow on Instagram">INSTAGRAM</a>
-      <a href="#" class="footer__social-link" data-cursor-hover aria-label="Message on WhatsApp">WHATSAPP</a>
-      <a href="#" class="footer__social-link" data-cursor-hover aria-label="Send an email">EMAIL</a>
+      <a href="__INSTAGRAM_URL__" target="_blank" rel="noopener" class="footer__social-link" data-cursor-hover aria-label="Follow on Instagram">INSTAGRAM</a>
+      <a href="__WHATSAPP_URL__" target="_blank" rel="noopener" class="footer__social-link" data-cursor-hover aria-label="Message on WhatsApp">WHATSAPP</a>
+      <a href="mailto:__EMAIL_ADDRESS__" class="footer__social-link" data-cursor-hover aria-label="Send an email">EMAIL</a>
     </div>
   </footer>
 
-  <!-- Config (gitignored — contains your API keys) -->
-  <script src="js/config.js"></script>
+  <!-- JS -->
 
   <!-- Main JS — deferred to not block rendering -->
   <script defer src="js/main.js"></script>

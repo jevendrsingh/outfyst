@@ -1,6 +1,7 @@
 # Private config (contains API keys)
 js/config.js
 .env
+public/
 
 # OS files
 .DS_Store

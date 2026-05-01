@@ -13,12 +13,45 @@
    ═══════════════════════════════════════════════════════════ */
 
 document.addEventListener('DOMContentLoaded', function () {
+  initThemeToggle();
   initHeroAnimation();
   initManifestoObserver();
   initFormHandler();
   initCustomCursor();
   initCountdownTimer();
 });
+
+/* ═══════════════════════════════════════════════════════════
+   THEME TOGGLE
+   ═══════════════════════════════════════════════════════════ */
+
+function initThemeToggle() {
+  var toggle = document.getElementById('theme-toggle');
+  if (!toggle) return;
+
+  var STORAGE_KEY = 'outfyst_theme';
+
+  // Check saved preference or system preference
+  var saved = localStorage.getItem(STORAGE_KEY);
+  if (saved) {
+    document.documentElement.setAttribute('data-theme', saved);
+  } else if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+    document.documentElement.setAttribute('data-theme', 'light');
+  }
+
+  toggle.addEventListener('click', function () {
+    var current = document.documentElement.getAttribute('data-theme');
+    var next = current === 'light' ? 'dark' : 'light';
+
+    if (next === 'dark') {
+      document.documentElement.removeAttribute('data-theme');
+    } else {
+      document.documentElement.setAttribute('data-theme', next);
+    }
+
+    localStorage.setItem(STORAGE_KEY, next);
+  });
+}
 
 /* ═══════════════════════════════════════════════════════════
    HERO ENTRANCE ANIMATION

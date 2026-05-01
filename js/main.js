@@ -7,12 +7,13 @@
    1. Go to https://web3forms.com
    2. Enter the email address where you want form submissions
    3. They'll email you an access key — copy it
-   4. Paste it below, replacing 'YOUR_ACCESS_KEY_HERE'
+   4. Open js/config.js and paste your key there
+      (if config.js doesn't exist, copy config.example.js → config.js)
    5. Save, deploy, done. Submissions land in your inbox.
    
    ═══════════════════════════════════════════════════════════ */
 
-const WEB3FORMS_ACCESS_KEY = 'YOUR_ACCESS_KEY_HERE';
+var WEB3FORMS_ACCESS_KEY = (window.OUTFYST_CONFIG && window.OUTFYST_CONFIG.WEB3FORMS_ACCESS_KEY) || 'YOUR_ACCESS_KEY_HERE';
 
 /* ═══════════════════════════════════════════════════════════
    INIT — Runs after DOM is ready

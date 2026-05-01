@@ -1,0 +1,8 @@
+{
+  "name": "outfyst",
+  "version": "1.0.0",
+  "description": "OUTFYST — Premium Indian Streetwear. Launching soon.",
+  "scripts": {
+    "build": "node build.js"
+  }
+}

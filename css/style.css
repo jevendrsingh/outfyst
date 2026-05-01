@@ -43,6 +43,7 @@
   --noise-opacity: 0.06;
   --scanline-color: rgba(192, 192, 192, 0.15);
   --fluid-display-mult: 0.4;
+  --liquid-shimmer-color: rgba(255, 255, 255, 0.03);
 }
 
 /* ── Light Theme ── */
@@ -55,17 +56,18 @@
   --text-muted: #999999;
   --border-subtle: rgba(0, 0, 0, 0.06);
   --border-medium: rgba(0, 0, 0, 0.12);
-  --glass-bg: rgba(255, 255, 255, 0.7);
-  --glass-border: rgba(255, 255, 255, 0.3);
-  --glass-card: rgba(255, 255, 255, 0.85);
-  --card-shadow: rgba(0, 0, 0, 0.08);
-  --accent-glow: rgba(100, 100, 200, 0.06);
-  --hero-gradient: radial-gradient(ellipse at 50% 50%, #E8E8E8 0%, #FAFAFA 70%);
-  --btn-hover-bg: rgba(0, 0, 0, 0.06);
+  --glass-bg: rgba(255, 255, 255, 0.75);
+  --glass-border: rgba(0, 0, 0, 0.05);
+  --glass-card: rgba(255, 255, 255, 0.88);
+  --card-shadow: rgba(0, 0, 0, 0.06);
+  --accent-glow: rgba(100, 100, 200, 0.04);
+  --hero-gradient: radial-gradient(ellipse at 50% 50%, #F2F2F2 0%, #FAFAFA 70%);
+  --btn-hover-bg: rgba(0, 0, 0, 0.04);
   --manifesto-bg: #F0F0F0;
-  --noise-opacity: 0.03;
-  --scanline-color: rgba(0, 0, 0, 0.06);
+  --noise-opacity: 0.015;
+  --scanline-color: rgba(0, 0, 0, 0.025);
   --fluid-display-mult: 0.6;
+  --liquid-shimmer-color: rgba(0, 0, 0, 0.015);
 }
 
 @media (max-width: 640px) {
@@ -206,6 +208,7 @@ textarea {
   padding: 0 var(--gutter);
   z-index: 1000;
   transition: background 0.4s ease, border-color 0.4s ease;
+  overflow: hidden;
 }
 
 .navbar__wordmark {
@@ -214,6 +217,76 @@ textarea {
   letter-spacing: 0.18em;
   color: var(--text-primary);
   text-transform: uppercase;
+  text-decoration: none;
+  position: relative;
+  z-index: 2;
+  transition: opacity 0.25s ease;
+}
+
+.navbar__wordmark:hover {
+  opacity: 0.7;
+}
+
+/* ── Liquid shimmer overlay ── */
+.navbar__liquid {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.navbar__liquid::before,
+.navbar__liquid::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(30px);
+  opacity: 0;
+  animation: liquidShimmer 8s ease-in-out infinite;
+}
+
+.navbar__liquid::before {
+  width: 120px;
+  height: 40px;
+  background: var(--liquid-shimmer-color, rgba(255, 255, 255, 0.03));
+  top: 50%;
+  left: 15%;
+  transform: translateY(-50%);
+  animation-delay: 0s;
+}
+
+.navbar__liquid::after {
+  width: 100px;
+  height: 35px;
+  background: var(--liquid-shimmer-color, rgba(255, 255, 255, 0.025));
+  top: 50%;
+  right: 20%;
+  transform: translateY(-50%);
+  animation-delay: -4s;
+}
+
+@keyframes liquidShimmer {
+  0%, 100% {
+    opacity: 0;
+    transform: translateY(-50%) translateX(-20px) scale(0.8);
+  }
+  30% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+    transform: translateY(-50%) translateX(40px) scale(1.1);
+  }
+  70% {
+    opacity: 0.8;
+  }
+}
+
+/* Ensure navbar children sit above liquid */
+.navbar__right {
+  position: relative;
+  z-index: 2;
 }
 
 .navbar__status {
@@ -930,6 +1003,13 @@ textarea {
   color: var(--text-primary);
   text-transform: uppercase;
   margin-bottom: 16px;
+  text-decoration: none;
+  display: inline-block;
+  transition: opacity 0.25s ease;
+}
+
+.footer__wordmark:hover {
+  opacity: 0.7;
 }
 
 .footer__copy {

@@ -40,11 +40,13 @@
       [0.1, 0.02, 0.12],   // wine
     ],
     LIGHT_PALETTE: [
-      [0.7, 0.75, 0.9],    // soft lavender
-      [0.65, 0.8, 0.85],   // light teal
-      [0.8, 0.7, 0.85],    // soft mauve
-      [0.7, 0.78, 0.82],   // soft sky
-    ]
+      [0.55, 0.58, 0.68],  // muted lavender
+      [0.50, 0.62, 0.65],  // muted teal
+      [0.62, 0.55, 0.65],  // muted mauve
+      [0.55, 0.60, 0.63],  // muted sky
+    ],
+    LIGHT_SPLAT_RADIUS: 0.18,
+    LIGHT_SPLAT_FORCE: 3000
   };
 
   // ── Resize ──
@@ -200,10 +202,15 @@
 
   // ── Splat function ──
   function splat(x, y, dx, dy, color) {
+    var isLight = document.documentElement.getAttribute('data-theme') === 'light';
+    var force = isLight ? config.LIGHT_SPLAT_FORCE : config.SPLAT_FORCE;
+    var radius = isLight ? config.LIGHT_SPLAT_RADIUS : config.SPLAT_RADIUS;
+    var dyeMult = isLight ? 0.4 : 0.8;
+
     bindQuad(splatProg);
     gl.uniform2f(gl.getUniformLocation(splatProg, 'uPoint'), x, y);
-    gl.uniform3f(gl.getUniformLocation(splatProg, 'uColor'), dx * config.SPLAT_FORCE, dy * config.SPLAT_FORCE, 0.0);
-    gl.uniform1f(gl.getUniformLocation(splatProg, 'uRadius'), config.SPLAT_RADIUS / 100.0);
+    gl.uniform3f(gl.getUniformLocation(splatProg, 'uColor'), dx * force, dy * force, 0.0);
+    gl.uniform1f(gl.getUniformLocation(splatProg, 'uRadius'), radius / 100.0);
     gl.uniform1f(gl.getUniformLocation(splatProg, 'uAspect'), canvas.width / canvas.height);
 
     // Splat velocity
@@ -216,7 +223,7 @@
     velocity.swap();
 
     // Splat dye
-    gl.uniform3f(gl.getUniformLocation(splatProg, 'uColor'), color[0] * 0.8, color[1] * 0.8, color[2] * 0.8);
+    gl.uniform3f(gl.getUniformLocation(splatProg, 'uColor'), color[0] * dyeMult, color[1] * dyeMult, color[2] * dyeMult);
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, dye.read.texture);
     gl.uniform1i(gl.getUniformLocation(splatProg, 'uTarget'), 0);
@@ -322,7 +329,7 @@
     gl.viewport(0, 0, canvas.width, canvas.height);
     bindQuad(displayProg);
     var isLight = document.documentElement.getAttribute('data-theme') === 'light';
-    gl.uniform1f(gl.getUniformLocation(displayProg, 'uBrightness'), isLight ? 0.35 : 0.4);
+    gl.uniform1f(gl.getUniformLocation(displayProg, 'uBrightness'), isLight ? 0.18 : 0.4);
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, dye.read.texture);
     gl.uniform1i(gl.getUniformLocation(displayProg, 'uTexture'), 0);
